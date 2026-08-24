@@ -65,7 +65,7 @@ df_bruto.to_csv("vendas.csv", index=False)
 print(f"Dataset gerado com {len(df_bruto)} registros.")
 print(df_bruto.head())
             
-#agora vou conferir a tabela
+# agora vou conferir a tabela
 
 def inspecionar_dados(df):
     """Exibe as informacoes estruturais do DataFrame."""
@@ -78,3 +78,38 @@ def inspecionar_dados(df):
     return df
         
 inspecionar_dados(df_bruto)
+
+# Etapa 1 - limpeza de dados
+
+import re
+
+def limpar_dados(df):
+    """
+    Limpa e trata o DataFrame de vendas.
+    Retorna: (df_limpo, relatorio), onde relatorio e um dicionario
+    com as contagens de registros iniciais, removidos e finais.
+    """
+    df = df.copy()
+    n_inicial = len(df)
+    
+# remover espaços extras em texto
+
+    colunas_texto = ["cliente", "produto", "categoria", "regiao"]
+    for col in colunas_texto:
+        df[col] = df[col].str.strip()    
+    
+# teste da Etapa 1
+teste = df_bruto.copy()
+teste["produto"] = teste["produto"].str.strip()
+print(teste["produto"].head(10))
+
+# Etapa 2 — tratar datas inválidas - converter data_venda e descartar as invalidas
+
+teste["data_venda"] = pd.to_datetime(teste["data_venda"], errors="coerce")
+n_data_invalida = teste["data_venda"].isna().sum()
+teste = teste.dropna(subset=["data_venda"])
+
+# --- teste da Etapa 2 ---
+print("Linhas antes:", len(df_bruto))
+print("Datas invalidas encontradas:", n_data_invalida)
+print("Linhas depois de remover datas invalidas:", len(teste))
