@@ -109,7 +109,16 @@ teste["data_venda"] = pd.to_datetime(teste["data_venda"], errors="coerce")
 n_data_invalida = teste["data_venda"].isna().sum()
 teste = teste.dropna(subset=["data_venda"])
 
-# --- teste da Etapa 2 ---
+# teste da Etapa 2
 print("Linhas antes:", len(df_bruto))
 print("Datas invalidas encontradas:", n_data_invalida)
 print("Linhas depois de remover datas invalidas:", len(teste))
+
+# Etapa 3: remover nulos em quantidade e preco_unitario 
+linhas_antes_etapa3 = len(teste)
+teste = teste.dropna(subset=["quantidade", "preco_unitario"])
+
+# teste da Etapa 3 
+print("Linhas antes da Etapa 3:", linhas_antes_etapa3)
+print("Linhas depois de remover nulos:", len(teste))
+print("Total removido nesta etapa:", linhas_antes_etapa3 - len(teste))
