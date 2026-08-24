@@ -476,3 +476,18 @@ plt.savefig("outputs/graficos/receita_por_mes.png", dpi=150)
 plt.close()
 
 print("Grafico 1 salvo: outputs/graficos/receita_por_mes.png")
+
+# Gráfico 2 — top 5 produtos por receita
+
+# Grafico 2: top produtos por receita (barra)
+
+fig, ax = plt.subplots()
+sns.barplot(data=top_produtos, x="receita_total", y="produto", hue="produto", legend=False, palette="Blues_d", ax=ax)
+ax.set_title("Top 5 Produtos por Receita")
+ax.set_xlabel("Receita Total (R$)")
+ax.set_ylabel("Produto")
+plt.tight_layout()
+plt.savefig("outputs/graficos/top_produtos.png", dpi=150)
+plt.close()
+
+print("Grafico 2 salvo: outputs/graficos/top_produtos.png")
