@@ -401,3 +401,14 @@ print("Top 10 clientes:")
 print(top_10_clientes)
 print("\nDistribuicao por segmento:")
 print(distribuicao_segmentos)
+
+# Sessão 7 — RF07, NumPy
+
+# Etapa 1: converter receita_total para array numpy 
+
+receitas = df_limpo["receita_total"].to_numpy()
+
+# teste da Etapa 1
+
+print(type(receitas))
+print(receitas[:10])
