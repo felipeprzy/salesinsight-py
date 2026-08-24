@@ -324,3 +324,15 @@ por_mes = (
 
 # teste da Etapa 1
 print(por_mes)
+
+# etapa 2: top produtos por receita
+top_produtos = (
+    df_limpo.groupby("produto")
+    .agg(receita_total=("receita_total", "sum"))
+    .reset_index()
+    .sort_values("receita_total", ascending=False)
+    .head(5)
+)
+
+# teste da Etapa 2
+print(top_produtos)
