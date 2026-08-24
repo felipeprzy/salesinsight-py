@@ -122,3 +122,13 @@ teste = teste.dropna(subset=["quantidade", "preco_unitario"])
 print("Linhas antes da Etapa 3:", linhas_antes_etapa3)
 print("Linhas depois de remover nulos:", len(teste))
 print("Total removido nesta etapa:", linhas_antes_etapa3 - len(teste))
+
+# Etapa 4: garantir os tipos numericos corretos (inteiro)
+
+teste["quantidade"] = teste["quantidade"].astype(int)
+teste["preco_unitario"] = teste["preco_unitario"].astype(float)
+
+# teste da Etapa 4 
+print("Tipo de quantidade:", teste["quantidade"].dtype)
+print("Tipo de preco_unitario:", teste["preco_unitario"].dtype)
+print(teste[["quantidade", "preco_unitario"]].head())
