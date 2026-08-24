@@ -349,3 +349,19 @@ por_categoria = (
 # teste da Etapa 3
 
 print(por_categoria)
+
+# Etapa 4: receita e tícket médio por região
+
+por_regiao = (
+    df_limpo.groupby("regiao")
+    .agg(
+        receita_total=("receita_total", "sum"),
+        ticket_medio=("receita_total", "mean"),
+    )
+    .reset_index()
+    .sort_values("receita_total", ascending=False)
+)
+
+# teste da Etapa 4
+
+print(por_regiao)
