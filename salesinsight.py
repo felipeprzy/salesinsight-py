@@ -448,3 +448,17 @@ print("Total de vendas:", len(receitas))
 print("Vendas acima da media:", len(vendas_acima_da_media))
 print("Vendas abaixo ou igual a media:", len(receitas) - len(vendas_acima_da_media))
 
+# Sessão 8: RF08, visualizações
+
+# imports e configuracao visual para os gráficos
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import os
+
+sns.set_theme(style="whitegrid", palette="muted")
+plt.rcParams["figure.figsize"] = (12, 6)
+plt.rcParams["axes.titlesize"] = 14
+
+print("Bibliotecas de visualizacao carregadas com sucesso.")
+
