@@ -159,3 +159,32 @@ teste["cliente"] = teste["cliente"].apply(padronizar_cliente_v2)
 
 # Teste da Etapa 5 corrigida
 print(teste["cliente"].head(15))
+
+# Etapa 6: relatorio detalhado de limpeza
+base_relatorio = df_bruto.copy()
+base_relatorio["data_venda"] = pd.to_datetime(base_relatorio["data_venda"], errors="coerce")
+
+linhas_data_invalida = base_relatorio["data_venda"].isna().sum()
+base_relatorio = base_relatorio.dropna(subset=["data_venda"])
+
+linhas_nulo_quantidade = base_relatorio["quantidade"].isna().sum()
+linhas_nulo_preco = base_relatorio["preco_unitario"].isna().sum()
+linhas_nulo_ambos = base_relatorio[
+    base_relatorio["quantidade"].isna() & base_relatorio["preco_unitario"].isna()
+].shape[0]
+
+base_relatorio = base_relatorio.dropna(subset=["quantidade", "preco_unitario"])
+
+relatorio = {
+    "linhas_iniciais": len(df_bruto),
+    "removidas_data_invalida": int(linhas_data_invalida),
+    "removidas_nulo_quantidade": int(linhas_nulo_quantidade),
+    "removidas_nulo_preco_unitario": int(linhas_nulo_preco),
+    "removidas_nulo_ambos_ao_mesmo_tempo": int(linhas_nulo_ambos),
+    "linhas_finais": len(base_relatorio),
+}
+
+# teste da Etapa 6
+print("Relatorio de limpeza:")
+for chave, valor in relatorio.items():
+    print(f"  {chave}: {valor}")
