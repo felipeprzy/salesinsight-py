@@ -264,3 +264,10 @@ df_limpo["receita_total"] = df_limpo["quantidade"] * df_limpo["preco_unitario"]
 
 # teste da Etapa 1
 print(df_limpo[["quantidade", "preco_unitario", "receita_total"]].head())
+
+# Etapa 2: extrair mes e ano da data
+df_limpo["mes"] = df_limpo["data_venda"].dt.month
+df_limpo["ano"] = df_limpo["data_venda"].dt.year
+
+# --- teste da Etapa 2 ---
+print(df_limpo[["data_venda", "mes", "ano"]].head(10))
