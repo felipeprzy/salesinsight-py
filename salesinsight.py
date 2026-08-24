@@ -188,3 +188,71 @@ relatorio = {
 print("Relatorio de limpeza:")
 for chave, valor in relatorio.items():
     print(f"  {chave}: {valor}")
+    
+    
+def limpar_dados(df):
+    """
+    Limpa e trata o DataFrame de vendas.
+    Retorna: (df_limpo, relatorio), onde relatorio e um dicionario
+    com as contagens detalhadas de registros removidos por motivo.
+    """
+    df = df.copy()
+    linhas_iniciais = len(df)
+
+    # Etapa 1: remover espacos extras nas colunas de texto
+    colunas_texto = ["cliente", "produto", "categoria", "regiao"]
+    for col in colunas_texto:
+        df[col] = df[col].str.strip()
+
+    # Etapa 2: converter data_venda e descartar as invalidas
+    df["data_venda"] = pd.to_datetime(df["data_venda"], errors="coerce")
+    removidas_data_invalida = df["data_venda"].isna().sum()
+    df = df.dropna(subset=["data_venda"])
+
+    # Etapa 3: contar e remover nulos em quantidade e preco_unitario
+    removidas_nulo_quantidade = df["quantidade"].isna().sum()
+    removidas_nulo_preco = df["preco_unitario"].isna().sum()
+    removidas_nulo_ambos = df[
+        df["quantidade"].isna() & df["preco_unitario"].isna()
+    ].shape[0]
+    df = df.dropna(subset=["quantidade", "preco_unitario"])
+
+    # Etapa 4: garantir os tipos numericos corretos
+    df["quantidade"] = df["quantidade"].astype(int)
+    df["preco_unitario"] = df["preco_unitario"].astype(float)
+
+    # Etapa 5: padronizar nome do cliente com regex (versao v2, corrigida)
+    def padronizar_cliente_v2(nome):
+        """Extrai o numero do nome do cliente e reconstroi no padrao Cliente_NNN."""
+        digitos = re.findall(r"\d+", str(nome))
+        if digitos:
+            numero = digitos[0].zfill(3)
+            return f"Cliente_{numero}"
+        return "Cliente_000"
+
+    df["cliente"] = df["cliente"].apply(padronizar_cliente_v2)
+
+    # Etapa 6: montar relatorio detalhado de limpeza
+    relatorio = {
+        "linhas_iniciais": int(linhas_iniciais),
+        "removidas_data_invalida": int(removidas_data_invalida),
+        "removidas_nulo_quantidade": int(removidas_nulo_quantidade),
+        "removidas_nulo_preco_unitario": int(removidas_nulo_preco),
+        "removidas_nulo_ambos_ao_mesmo_tempo": int(removidas_nulo_ambos),
+        "linhas_finais": len(df),
+    }
+
+    return df, relatorio
+
+
+# --- teste da funcao limpar_dados completa ---
+df_limpo, relatorio_limpeza = limpar_dados(df_bruto)
+
+print("\n=== RESULTADO DA FUNCAO limpar_dados() ===")
+print("Relatorio:")
+for chave, valor in relatorio_limpeza.items():
+    print(f"  {chave}: {valor}")
+print("\nAmostra do df_limpo:")
+print(df_limpo.head(10))
+print("\nTipos finais:")
+print(df_limpo.dtypes)
