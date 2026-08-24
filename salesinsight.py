@@ -412,3 +412,17 @@ receitas = df_limpo["receita_total"].to_numpy()
 
 print(type(receitas))
 print(receitas[:10])
+
+# Etapa 2: agregações com numpy
+
+media = np.mean(receitas)
+mediana = np.median(receitas)
+desvio_padrao = np.std(receitas)
+soma_total = np.sum(receitas)
+
+# teste da Etapa 2
+
+print("Media:", media)
+print("Mediana:", mediana)
+print("Desvio padrao:", desvio_padrao)
+print("Soma total:", soma_total)
