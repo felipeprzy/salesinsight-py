@@ -546,3 +546,27 @@ plt.savefig("outputs/graficos/painel_resumo.png", dpi=150)
 plt.close()
 
 print("Grafico 4 salvo: outputs/graficos/painel_resumo.png")
+
+# Sessão 9: parte A - função de ordem superior ; partte B - classe AnalisadorDeVendas.
+
+# RF09 Parte A: funcao de ordem superior
+
+def processar_coluna(df, coluna, funcao_transformacao, nome_saida=None):
+    """Aplica uma funcao de transformacao a uma coluna do DataFrame."""
+    nome_saida = nome_saida or f"{coluna}_transformado"
+    df[nome_saida] = df[coluna].apply(funcao_transformacao)
+    return df
+
+# teste da Etapa 1: usando com duas lambdas diferentes
+df_limpo = processar_coluna(
+    df_limpo, "receita_total",
+    lambda x: round(x / 1000, 2),
+    nome_saida="receita_em_milhares"
+)
+df_limpo = processar_coluna(
+    df_limpo, "quantidade",
+    lambda q: "Alto Volume" if q > 5 else "Baixo Volume",
+    nome_saida="perfil_volume"
+)
+
+print(df_limpo[["receita_total", "receita_em_milhares", "quantidade", "perfil_volume"]].head(10))
