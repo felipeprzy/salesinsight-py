@@ -245,7 +245,7 @@ def limpar_dados(df):
     return df, relatorio
 
 
-# --- teste da funcao limpar_dados completa ---
+# teste da funcao limpar_dados completa 
 df_limpo, relatorio_limpeza = limpar_dados(df_bruto)
 
 print("\n=== RESULTADO DA FUNCAO limpar_dados() ===")
@@ -256,3 +256,11 @@ print("\nAmostra do df_limpo:")
 print(df_limpo.head(10))
 print("\nTipos finais:")
 print(df_limpo.dtypes)
+
+#Sessão 4 — Colunas derivadas
+
+# Etapa 1: receita_total (operacao vetorizada entre Series) 
+df_limpo["receita_total"] = df_limpo["quantidade"] * df_limpo["preco_unitario"]
+
+# teste da Etapa 1
+print(df_limpo[["quantidade", "preco_unitario", "receita_total"]].head())
