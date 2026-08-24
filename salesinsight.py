@@ -336,3 +336,16 @@ top_produtos = (
 
 # teste da Etapa 2
 print(top_produtos)
+
+# Etapa 3: receita por categoria
+
+por_categoria = (
+    df_limpo.groupby("categoria")
+    .agg(receita_total=("receita_total", "sum"))
+    .reset_index()
+    .sort_values("receita_total", ascending=False)
+)
+
+# teste da Etapa 3
+
+print(por_categoria)
