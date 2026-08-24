@@ -426,3 +426,14 @@ print("Media:", media)
 print("Mediana:", mediana)
 print("Desvio padrao:", desvio_padrao)
 print("Soma total:", soma_total)
+
+# Etapa 3: broadcasting - escalar receitas para 0-1
+
+receitas_escaladas = (receitas - receitas.min()) / (receitas.max() - receitas.min())
+
+# teste da Etapa 3
+
+print("Receitas originais (primeiras 5):", receitas[:5])
+print("Receitas escaladas (primeiras 5):", receitas_escaladas[:5])
+print("Minimo escalado:", receitas_escaladas.min())
+print("Maximo escalado:", receitas_escaladas.max())
