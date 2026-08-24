@@ -389,3 +389,15 @@ gasto_cliente["segmento"] = gasto_cliente["total_gasto"].apply(
 # teste da Etapa 2
 
 print(gasto_cliente.head(10))
+
+# Etapa 3: top 10 clientes e distribuição por segmento
+
+top_10_clientes = gasto_cliente.sort_values("total_gasto", ascending=False).head(10)
+distribuicao_segmentos = gasto_cliente["segmento"].value_counts()
+
+# teste da Etapa 3
+
+print("Top 10 clientes:")
+print(top_10_clientes)
+print("\nDistribuicao por segmento:")
+print(distribuicao_segmentos)
