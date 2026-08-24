@@ -491,3 +491,16 @@ plt.savefig("outputs/graficos/top_produtos.png", dpi=150)
 plt.close()
 
 print("Grafico 2 salvo: outputs/graficos/top_produtos.png")
+
+# Gráfico 3 — quantidade × receita (dispersão), colorido por categoria.
+
+fig, ax = plt.subplots()
+sns.scatterplot(data=df_limpo, x="quantidade", y="receita_total", hue="categoria", s=80, ax=ax)
+ax.set_title("Quantidade vs Receita por Transacao")
+ax.set_xlabel("Quantidade")
+ax.set_ylabel("Receita Total (R$)")
+plt.tight_layout()
+plt.savefig("outputs/graficos/quantidade_vs_receita.png", dpi=150)
+plt.close()
+
+print("Grafico 3 salvo: outputs/graficos/quantidade_vs_receita.png")
