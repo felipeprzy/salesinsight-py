@@ -132,3 +132,30 @@ teste["preco_unitario"] = teste["preco_unitario"].astype(float)
 print("Tipo de quantidade:", teste["quantidade"].dtype)
 print("Tipo de preco_unitario:", teste["preco_unitario"].dtype)
 print(teste[["quantidade", "preco_unitario"]].head())
+
+# Etapa 5: padronizar nome do cliente com regex
+
+def padronizar_cliente(nome):
+        """Remove tudo que nao for letra, numero ou underline, e ajusta o padrao Cliente_NNN."""
+        limpo = re.sub(r"[^A-Za-z0-9_]", "", str(nome))
+        limpo = re.sub(r"(?i)cliente", "Cliente", limpo)
+        return limpo
+
+teste["cliente"] = teste["cliente"].apply(padronizar_cliente)
+
+# teste da Etapa 5
+print(teste["cliente"].head(15))
+
+# correção da Etapa 5 - a v1 deixou "Cliente034" sem underline, ajustando
+def padronizar_cliente_v2(nome):
+    """Extrai o numero do nome do cliente e reconstroi no padrao Cliente_NNN."""
+    digitos = re.findall(r"\d+", str(nome))
+    if digitos:
+        numero = digitos[0].zfill(3)
+        return f"Cliente_{numero}"
+    return "Cliente_000"
+
+teste["cliente"] = teste["cliente"].apply(padronizar_cliente_v2)
+
+# Teste da Etapa 5 corrigida
+print(teste["cliente"].head(15))
