@@ -294,3 +294,15 @@ df_limpo["trimestre"] = "Q" + df_limpo["data_venda"].dt.quarter.astype(str)
 
 # teste da Etapa 4
 print(df_limpo[["data_venda", "mes", "trimestre"]].head(10))
+
+# Etapa 5: faixa_receita_item via np.select
+condicoes = [
+    df_limpo["receita_total"] < 500,
+    (df_limpo["receita_total"] >= 500) & (df_limpo["receita_total"] < 5000),
+    df_limpo["receita_total"] >= 5000,
+]
+faixas = ["Baixo Valor", "Medio Valor", "Alto Valor"]
+df_limpo["faixa_receita_item"] = np.select(condicoes, faixas, default="Nao Classificado")
+
+# teste da Etapa 5
+print(df_limpo[["receita_total", "faixa_receita_item"]].head(10))
