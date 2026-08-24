@@ -379,3 +379,13 @@ gasto_cliente = (
 # teste da Etapa 1
 
 print(gasto_cliente.head(10))
+
+# Etapa 2: classificar em Bronze/Prata/Ouro com lambda
+
+gasto_cliente["segmento"] = gasto_cliente["total_gasto"].apply(
+    lambda v: "Bronze" if v < 5000 else ("Prata" if v < 15000 else "Ouro")
+)
+
+# teste da Etapa 2
+
+print(gasto_cliente.head(10))
