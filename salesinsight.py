@@ -30,7 +30,9 @@ def gerar_dataset_vendas(n_registros=200, seed=56):
         data = data_inicio + timedelta(days=random.randint(0, 364))
         data_txt = data.strftime("%Y-%m-%d")
         cliente = f"Cliente_{random.randint(1, 50):03d}"
-                # --- sujeira proposital para a etapa de limpeza ---
+               
+ # sujeira proposital para a etapa de limpeza
+                
         if random.random() < 0.05:
             quantidade = None                    # valor nulo
         if random.random() < 0.04:
@@ -123,7 +125,7 @@ print("Linhas antes da Etapa 3:", linhas_antes_etapa3)
 print("Linhas depois de remover nulos:", len(teste))
 print("Total removido nesta etapa:", linhas_antes_etapa3 - len(teste))
 
-# Etapa 4: garantir os tipos numericos corretos (inteiro)
+# Etapa 4: garantir os tipos numéricos corretos (inteiro)
 
 teste["quantidade"] = teste["quantidade"].astype(int)
 teste["preco_unitario"] = teste["preco_unitario"].astype(float)
@@ -204,12 +206,14 @@ def limpar_dados(df):
     for col in colunas_texto:
         df[col] = df[col].str.strip()
 
-    # Etapa 2: converter data_venda e descartar as invalidas
+    # Etapa 2: converter data_venda e descartar as inválidas
+    
     df["data_venda"] = pd.to_datetime(df["data_venda"], errors="coerce")
     removidas_data_invalida = df["data_venda"].isna().sum()
     df = df.dropna(subset=["data_venda"])
 
-    # Etapa 3: contar e remover nulos em quantidade e preco_unitario
+    # Etapa 3: contar e remover nulos em quantidade e preco_unitário
+    
     removidas_nulo_quantidade = df["quantidade"].isna().sum()
     removidas_nulo_preco = df["preco_unitario"].isna().sum()
     removidas_nulo_ambos = df[
@@ -217,11 +221,13 @@ def limpar_dados(df):
     ].shape[0]
     df = df.dropna(subset=["quantidade", "preco_unitario"])
 
-    # Etapa 4: garantir os tipos numericos corretos
+    # Etapa 4: garantir os tipos numéricos corretos
+    
     df["quantidade"] = df["quantidade"].astype(int)
     df["preco_unitario"] = df["preco_unitario"].astype(float)
 
-    # Etapa 5: padronizar nome do cliente com regex (versao v2, corrigida)
+    # Etapa 5: padronizar nome do cliente com regex (versão v2, corrigida)
+    
     def padronizar_cliente_v2(nome):
         """Extrai o numero do nome do cliente e reconstroi no padrao Cliente_NNN."""
         digitos = re.findall(r"\d+", str(nome))
@@ -232,7 +238,7 @@ def limpar_dados(df):
 
     df["cliente"] = df["cliente"].apply(padronizar_cliente_v2)
 
-    # Etapa 6: montar relatorio detalhado de limpeza
+    # Etapa 6: montar relatório detalhado de limpeza
     relatorio = {
         "linhas_iniciais": int(linhas_iniciais),
         "removidas_data_invalida": int(removidas_data_invalida),
@@ -245,7 +251,7 @@ def limpar_dados(df):
     return df, relatorio
 
 
-# teste da funcao limpar_dados completa 
+# teste da função limpar_dados completa 
 df_limpo, relatorio_limpeza = limpar_dados(df_bruto)
 
 print("\n=== RESULTADO DA FUNCAO limpar_dados() ===")
@@ -259,15 +265,27 @@ print(df_limpo.dtypes)
 
 #Sessão 4 — Colunas derivadas
 
-# Etapa 1: receita_total (operacao vetorizada entre Series) 
+# Etapa 1: receita_total (operação vetorizada entre séries) 
 df_limpo["receita_total"] = df_limpo["quantidade"] * df_limpo["preco_unitario"]
 
 # teste da Etapa 1
 print(df_limpo[["quantidade", "preco_unitario", "receita_total"]].head())
 
-# Etapa 2: extrair mes e ano da data
+# Etapa 2: extrair mês e ano da data
 df_limpo["mes"] = df_limpo["data_venda"].dt.month
 df_limpo["ano"] = df_limpo["data_venda"].dt.year
 
-# --- teste da Etapa 2 ---
+# teste da Etapa 2
 print(df_limpo[["data_venda", "mes", "ano"]].head(10))
+
+# etapa 3: nome do mês em português (dicionario de mapeamento)
+nomes_meses = {
+    1: "Janeiro", 2: "Fevereiro", 3: "Marco", 4: "Abril",
+    5: "Maio", 6: "Junho", 7: "Julho", 8: "Agosto",
+    9: "Setembro", 10: "Outubro", 11: "Novembro", 12: "Dezembro",
+}
+df_limpo["mes_nome"] = df_limpo["mes"].map(nomes_meses)
+
+# teste da Etapa 3
+print(df_limpo[["mes", "mes_nome"]].head(10))
+
