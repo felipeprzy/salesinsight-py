@@ -289,3 +289,8 @@ df_limpo["mes_nome"] = df_limpo["mes"].map(nomes_meses)
 # teste da Etapa 3
 print(df_limpo[["mes", "mes_nome"]].head(10))
 
+# Etapa 4: trimestre no formato Q1-Q4
+df_limpo["trimestre"] = "Q" + df_limpo["data_venda"].dt.quarter.astype(str)
+
+# teste da Etapa 4
+print(df_limpo[["data_venda", "mes", "trimestre"]].head(10))
