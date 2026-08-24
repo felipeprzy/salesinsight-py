@@ -306,3 +306,21 @@ df_limpo["faixa_receita_item"] = np.select(condicoes, faixas, default="Nao Class
 
 # teste da Etapa 5
 print(df_limpo[["receita_total", "faixa_receita_item"]].head(10))
+
+
+# Sessão 5 — RF05: métricas agregadas com groupby.
+
+# Etapa 1: métricas por mês
+
+por_mes = (
+    df_limpo.groupby("mes")
+    .agg(
+        receita_total=("receita_total", "sum"),
+        quantidade=("quantidade", "sum"),
+        n_vendas=("id_venda", "count"),
+    )
+    .reset_index()
+)
+
+# teste da Etapa 1
+print(por_mes)
