@@ -462,3 +462,17 @@ plt.rcParams["axes.titlesize"] = 14
 
 print("Bibliotecas de visualizacao carregadas com sucesso.")
 
+# Gráfico 1 — receita por mês
+
+os.makedirs("outputs/graficos", exist_ok=True)
+
+fig, ax = plt.subplots()
+ax.plot(por_mes["mes"], por_mes["receita_total"], marker="o", linewidth=2)
+ax.set_title("Receita Total por Mes")
+ax.set_xlabel("Mes")
+ax.set_ylabel("Receita Total (R$)")
+plt.tight_layout()
+plt.savefig("outputs/graficos/receita_por_mes.png", dpi=150)
+plt.close()
+
+print("Grafico 1 salvo: outputs/graficos/receita_por_mes.png")
