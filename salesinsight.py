@@ -365,3 +365,17 @@ por_regiao = (
 # teste da Etapa 4
 
 print(por_regiao)
+
+# Sessão 6: segmentar clientes por nível de gasto.
+
+# Etapa 1: total gasto por cliente 
+ 
+gasto_cliente = (
+    df_limpo.groupby("cliente")
+    .agg(total_gasto=("receita_total", "sum"))
+    .reset_index()
+)
+
+# teste da Etapa 1
+
+print(gasto_cliente.head(10))
