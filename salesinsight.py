@@ -437,3 +437,14 @@ print("Receitas originais (primeiras 5):", receitas[:5])
 print("Receitas escaladas (primeiras 5):", receitas_escaladas[:5])
 print("Minimo escalado:", receitas_escaladas.min())
 print("Maximo escalado:", receitas_escaladas.max())
+
+# Etapa 4: filtragem booleana - vendas acima da média
+
+vendas_acima_da_media = receitas[receitas > media]
+
+# teste da Etapa 4 
+
+print("Total de vendas:", len(receitas))
+print("Vendas acima da media:", len(vendas_acima_da_media))
+print("Vendas abaixo ou igual a media:", len(receitas) - len(vendas_acima_da_media))
+
