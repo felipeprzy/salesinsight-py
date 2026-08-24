@@ -504,3 +504,45 @@ plt.savefig("outputs/graficos/quantidade_vs_receita.png", dpi=150)
 plt.close()
 
 print("Grafico 3 salvo: outputs/graficos/quantidade_vs_receita.png")
+
+# Grafico 4: painel resumo com subplots 2x2
+
+fig, axes = plt.subplots(2, 2, figsize=(14, 9))
+
+# subplot [0,0]: receita por mes (linha)
+
+axes[0, 0].plot(por_mes["mes"], por_mes["receita_total"], marker="o", linewidth=2)
+axes[0, 0].set_title("Receita por Mes")
+axes[0, 0].set_xlabel("Mes")
+axes[0, 0].set_ylabel("Receita Total (R$)")
+
+# subplot [0,1]: top produtos (barra)
+
+sns.barplot(data=top_produtos, x="receita_total", y="produto", hue="produto",
+            legend=False, palette="Blues_d", ax=axes[0, 1])
+axes[0, 1].set_title("Top 5 Produtos")
+axes[0, 1].set_xlabel("Receita Total (R$)")
+axes[0, 1].set_ylabel("Produto")
+
+# subplot [1,0]: quantidade vs receita (dispersao)
+
+sns.scatterplot(data=df_limpo, x="quantidade", y="receita_total", hue="categoria",
+                 s=60, ax=axes[1, 0], legend=False)
+axes[1, 0].set_title("Quantidade vs Receita")
+axes[1, 0].set_xlabel("Quantidade")
+axes[1, 0].set_ylabel("Receita Total (R$)")
+
+# subplot [1,1]: receita por regiao (barra)
+
+sns.barplot(data=por_regiao, x="receita_total", y="regiao", hue="regiao",
+            legend=False, palette="Greens_d", ax=axes[1, 1])
+axes[1, 1].set_title("Receita por Regiao")
+axes[1, 1].set_xlabel("Receita Total (R$)")
+axes[1, 1].set_ylabel("Regiao")
+
+fig.suptitle("SalesInsight PY - Painel Resumo", fontsize=16)
+plt.tight_layout()
+plt.savefig("outputs/graficos/painel_resumo.png", dpi=150)
+plt.close()
+
+print("Grafico 4 salvo: outputs/graficos/painel_resumo.png")
