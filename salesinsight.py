@@ -642,3 +642,62 @@ AnalisadorDeVendas.transformar = transformar
 # teste da Etapa 3
 analisador.transformar()
 print(analisador.df_limpo[["receita_total", "mes_nome", "trimestre", "faixa_receita_item"]].head())
+
+# Etapa 4: método analisar
+
+def analisar(self):
+    """Calcula metricas agregadas, segmenta clientes e roda operacoes numpy."""
+    df = self.df_limpo
+
+    self.metricas["por_mes"] = (
+        df.groupby("mes")
+        .agg(receita_total=("receita_total", "sum"),
+             quantidade=("quantidade", "sum"),
+             n_vendas=("id_venda", "count"))
+        .reset_index()
+    )
+    self.metricas["top_produtos"] = (
+        df.groupby("produto")
+        .agg(receita_total=("receita_total", "sum"))
+        .reset_index()
+        .sort_values("receita_total", ascending=False)
+        .head(5)
+    )
+    self.metricas["por_categoria"] = (
+        df.groupby("categoria")
+        .agg(receita_total=("receita_total", "sum"))
+        .reset_index()
+        .sort_values("receita_total", ascending=False)
+    )
+    self.metricas["por_regiao"] = (
+        df.groupby("regiao")
+        .agg(receita_total=("receita_total", "sum"),
+             ticket_medio=("receita_total", "mean"))
+        .reset_index()
+        .sort_values("receita_total", ascending=False)
+    )
+
+    gasto_cliente = (
+        df.groupby("cliente")
+        .agg(total_gasto=("receita_total", "sum"))
+        .reset_index()
+    )
+    gasto_cliente["segmento"] = gasto_cliente["total_gasto"].apply(
+        lambda v: "Bronze" if v < 5000 else ("Prata" if v < 15000 else "Ouro")
+    )
+    self.clientes = gasto_cliente
+
+    receitas = df["receita_total"].to_numpy()
+    self.metricas["numpy_media"] = np.mean(receitas)
+    self.metricas["numpy_mediana"] = np.median(receitas)
+    self.metricas["numpy_desvio_padrao"] = np.std(receitas)
+
+    print(f"[Analisador] Metricas calculadas: {list(self.metricas.keys())}")
+    print(f"[Analisador] Clientes segmentados: {self.clientes['segmento'].value_counts().to_dict()}")
+
+AnalisadorDeVendas.analisar = analisar
+
+# teste da Etapa 4
+analisador.analisar()
+print(analisador.metricas["por_mes"].head())
+print(analisador.clientes.head())
