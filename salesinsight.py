@@ -844,3 +844,30 @@ AnalisadorDeVendas.resumo = resumo
 # teste do método resumo
 
 analisador.resumo()
+
+# RF11: funcao main() - ponto de entrada do projeto
+
+def main():
+    """Executa o fluxo completo do SalesInsight PY, do inicio ao fim."""
+    print("=" * 60)
+    print("  SALESINSIGHT PY - Analise de Dados de Vendas")
+    print("=" * 60)
+
+    if not os.path.exists("vendas.csv"):
+        gerar_dataset_vendas().to_csv("vendas.csv", index=False)
+
+    analisador_final = AnalisadorDeVendas("vendas.csv")
+    analisador_final.carregar()
+    analisador_final.limpar()
+    analisador_final.transformar()
+    analisador_final.analisar()
+    analisador_final.visualizar()
+    analisador_final.exportar_csv()
+    analisador_final.exportar_json()
+    analisador_final.resumo()
+
+    print("\n[CONCLUIDO] Fluxo finalizado com sucesso.")
+
+
+if __name__ == "__main__":
+    main()
