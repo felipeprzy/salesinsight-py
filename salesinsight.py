@@ -608,3 +608,37 @@ AnalisadorDeVendas.limpar = limpar
 analisador.limpar()
 print(analisador.relatorio_limpeza)
 
+# Etapa 3: metodo transformar - cria as colunas derivadas do RF04
+
+def transformar(self):
+    """Cria as colunas derivadas: receita_total, mes, mes_nome, trimestre, ano, faixa_receita_item."""
+    df = self.df_limpo
+
+    df["receita_total"] = df["quantidade"] * df["preco_unitario"]
+    df["mes"] = df["data_venda"].dt.month
+    df["ano"] = df["data_venda"].dt.year
+
+    nomes_meses = {
+        1: "Janeiro", 2: "Fevereiro", 3: "Marco", 4: "Abril",
+        5: "Maio", 6: "Junho", 7: "Julho", 8: "Agosto",
+        9: "Setembro", 10: "Outubro", 11: "Novembro", 12: "Dezembro",
+    }
+    df["mes_nome"] = df["mes"].map(nomes_meses)
+    df["trimestre"] = "Q" + df["data_venda"].dt.quarter.astype(str)
+
+    condicoes = [
+        df["receita_total"] < 500,
+        (df["receita_total"] >= 500) & (df["receita_total"] < 5000),
+        df["receita_total"] >= 5000,
+    ]
+    faixas = ["Baixo Valor", "Medio Valor", "Alto Valor"]
+    df["faixa_receita_item"] = np.select(condicoes, faixas, default="Nao Classificado")
+
+    self.df_limpo = df
+    print(f"[Analisador] Colunas derivadas criadas: {list(df.columns)}")
+
+AnalisadorDeVendas.transformar = transformar
+
+# teste da Etapa 3
+analisador.transformar()
+print(analisador.df_limpo[["receita_total", "mes_nome", "trimestre", "faixa_receita_item"]].head())
