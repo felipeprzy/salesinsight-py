@@ -594,3 +594,17 @@ class AnalisadorDeVendas:
 analisador = AnalisadorDeVendas("vendas.csv")
 analisador.carregar()
 print(analisador.df_bruto.head())
+
+#Etapa 2: método limpar (reaproveita limpar_dados já existente)
+
+def limpar(self):
+    """Limpa os dados reaproveitando a funcao limpar_dados()."""
+    self.df_limpo, self.relatorio_limpeza = limpar_dados(self.df_bruto)
+    print(f"[Analisador] Limpeza concluida: {self.relatorio_limpeza['linhas_finais']} linhas validas.")
+
+AnalisadorDeVendas.limpar = limpar
+
+# teste da Etapa
+analisador.limpar()
+print(analisador.relatorio_limpeza)
+
