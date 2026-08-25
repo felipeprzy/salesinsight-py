@@ -570,3 +570,27 @@ df_limpo = processar_coluna(
 )
 
 print(df_limpo[["receita_total", "receita_em_milhares", "quantidade", "perfil_volume"]].head(10))
+
+# Parte B: classe AnalisadorDeVendas
+
+class AnalisadorDeVendas:
+    """Encapsula o fluxo de analise dos dados de vendas."""
+
+    def __init__(self, caminho_arquivo):
+        self.caminho_arquivo = caminho_arquivo
+        self.df_bruto = None
+        self.df_limpo = None
+        self.metricas = {}
+        self.clientes = None
+        self.relatorio_limpeza = {}
+
+    def carregar(self):
+        """Le o CSV e guarda o DataFrame bruto."""
+        self.df_bruto = pd.read_csv(self.caminho_arquivo)
+        print(f"[Analisador] {len(self.df_bruto)} registros lidos.")
+
+
+# teste da Etapa 1
+analisador = AnalisadorDeVendas("vendas.csv")
+analisador.carregar()
+print(analisador.df_bruto.head())
