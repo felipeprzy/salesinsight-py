@@ -789,3 +789,38 @@ AnalisadorDeVendas.exportar_csv = exportar_csv
 
 # --- teste da Etapa 1 ---
 analisador.exportar_csv()
+
+# Etapa 2 — exportar estatísticas em JSON
+
+import json
+
+def exportar_json(self):
+    """Exporta estatisticas_gerais.json e releu o arquivo para confirmar a escrita."""
+    os.makedirs("outputs", exist_ok=True)
+
+    estatisticas = {
+        "linhas_iniciais": self.relatorio_limpeza["linhas_iniciais"],
+        "linhas_finais": self.relatorio_limpeza["linhas_finais"],
+        "receita_total": round(float(self.df_limpo["receita_total"].sum()), 2),
+        "ticket_medio": round(float(self.df_limpo["receita_total"].mean()), 2),
+        "media_numpy": round(float(self.metricas["numpy_media"]), 2),
+        "mediana_numpy": round(float(self.metricas["numpy_mediana"]), 2),
+        "desvio_padrao_numpy": round(float(self.metricas["numpy_desvio_padrao"]), 2),
+        "distribuicao_segmentos": self.clientes["segmento"].value_counts().to_dict(),
+    }
+
+    caminho = "outputs/estatisticas_gerais.json"
+    with open(caminho, "w", encoding="utf-8") as f:
+        json.dump(estatisticas, f, indent=4, ensure_ascii=False)
+
+    with open(caminho, "r", encoding="utf-8") as f:
+        conferencia = json.load(f)
+
+    print("[Analisador] JSON gravado e relido para confirmacao:")
+    print(conferencia)
+
+AnalisadorDeVendas.exportar_json = exportar_json
+
+# teste da Etapa 2
+
+analisador.exportar_json()

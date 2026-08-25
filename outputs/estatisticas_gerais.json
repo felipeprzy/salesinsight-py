@@ -1,0 +1,14 @@
+{
+    "linhas_iniciais": 200,
+    "linhas_finais": 172,
+    "receita_total": 777964.55,
+    "ticket_medio": 4523.05,
+    "media_numpy": 4523.05,
+    "mediana_numpy": 2221.12,
+    "desvio_padrao_numpy": 5536.56,
+    "distribuicao_segmentos": {
+        "Prata": 21,
+        "Ouro": 20,
+        "Bronze": 8
+    }
+}
