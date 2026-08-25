@@ -701,3 +701,75 @@ AnalisadorDeVendas.analisar = analisar
 analisador.analisar()
 print(analisador.metricas["por_mes"].head())
 print(analisador.clientes.head())
+
+# Etapa 5: método visualizar 
+
+def visualizar(self):
+    """Gera e exporta os 4 graficos obrigatorios do RF08."""
+    os.makedirs("outputs/graficos", exist_ok=True)
+    df = self.df_limpo
+    m = self.metricas
+
+    fig, ax = plt.subplots()
+    ax.plot(m["por_mes"]["mes"], m["por_mes"]["receita_total"], marker="o", linewidth=2)
+    ax.set_title("Receita Total por Mes")
+    ax.set_xlabel("Mes")
+    ax.set_ylabel("Receita Total (R$)")
+    plt.tight_layout()
+    plt.savefig("outputs/graficos/receita_por_mes.png", dpi=150)
+    plt.close()
+
+    fig, ax = plt.subplots()
+    sns.barplot(data=m["top_produtos"], x="receita_total", y="produto",
+                hue="produto", legend=False, palette="Blues_d", ax=ax)
+    ax.set_title("Top 5 Produtos por Receita")
+    ax.set_xlabel("Receita Total (R$)")
+    ax.set_ylabel("Produto")
+    plt.tight_layout()
+    plt.savefig("outputs/graficos/top_produtos.png", dpi=150)
+    plt.close()
+
+    fig, ax = plt.subplots()
+    sns.scatterplot(data=df, x="quantidade", y="receita_total", hue="categoria", s=80, ax=ax)
+    ax.set_title("Quantidade vs Receita por Transacao")
+    ax.set_xlabel("Quantidade")
+    ax.set_ylabel("Receita Total (R$)")
+    plt.tight_layout()
+    plt.savefig("outputs/graficos/quantidade_vs_receita.png", dpi=150)
+    plt.close()
+
+    fig, axes = plt.subplots(2, 2, figsize=(14, 9))
+    axes[0, 0].plot(m["por_mes"]["mes"], m["por_mes"]["receita_total"], marker="o", linewidth=2)
+    axes[0, 0].set_title("Receita por Mes")
+    axes[0, 0].set_xlabel("Mes")
+    axes[0, 0].set_ylabel("Receita Total (R$)")
+
+    sns.barplot(data=m["top_produtos"], x="receita_total", y="produto",
+                hue="produto", legend=False, palette="Blues_d", ax=axes[0, 1])
+    axes[0, 1].set_title("Top 5 Produtos")
+    axes[0, 1].set_xlabel("Receita Total (R$)")
+    axes[0, 1].set_ylabel("Produto")
+
+    sns.scatterplot(data=df, x="quantidade", y="receita_total", hue="categoria",
+                     s=60, ax=axes[1, 0], legend=False)
+    axes[1, 0].set_title("Quantidade vs Receita")
+    axes[1, 0].set_xlabel("Quantidade")
+    axes[1, 0].set_ylabel("Receita Total (R$)")
+
+    sns.barplot(data=m["por_regiao"], x="receita_total", y="regiao",
+                hue="regiao", legend=False, palette="Greens_d", ax=axes[1, 1])
+    axes[1, 1].set_title("Receita por Regiao")
+    axes[1, 1].set_xlabel("Receita Total (R$)")
+    axes[1, 1].set_ylabel("Regiao")
+
+    fig.suptitle("SalesInsight PY - Painel Resumo", fontsize=16)
+    plt.tight_layout()
+    plt.savefig("outputs/graficos/painel_resumo.png", dpi=150)
+    plt.close()
+
+    print("[Analisador] 4 graficos salvos em outputs/graficos/")
+
+AnalisadorDeVendas.visualizar = visualizar
+
+# teste da Etapa 5
+analisador.visualizar()
