@@ -824,3 +824,23 @@ AnalisadorDeVendas.exportar_json = exportar_json
 # teste da Etapa 2
 
 analisador.exportar_json()
+
+
+# resumo 
+
+def resumo(self):
+    """Imprime um resumo executivo do que foi processado."""
+    print("\n" + "=" * 50)
+    print("RESUMO EXECUTIVO - SALESINSIGHT PY")
+    print("=" * 50)
+    print(f"Linhas processadas: {self.relatorio_limpeza['linhas_iniciais']} -> {self.relatorio_limpeza['linhas_finais']}")
+    print(f"Receita total: R$ {self.df_limpo['receita_total'].sum():,.2f}")
+    print(f"Clientes segmentados: {self.clientes['segmento'].value_counts().to_dict()}")
+    print(f"Categoria lider: {self.metricas['por_categoria'].iloc[0]['categoria']}")
+    print("=" * 50)
+
+AnalisadorDeVendas.resumo = resumo
+
+# teste do método resumo
+
+analisador.resumo()
