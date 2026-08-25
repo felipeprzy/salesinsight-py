@@ -773,3 +773,19 @@ AnalisadorDeVendas.visualizar = visualizar
 
 # teste da Etapa 5
 analisador.visualizar()
+
+# Sessão 10 — exportar CSV e JSON
+
+# Etapa 1: exportar metricas em CSV
+
+def exportar_csv(self):
+    """Exporta metricas_por_mes.csv e segmentacao_clientes.csv."""
+    os.makedirs("outputs", exist_ok=True)
+    self.metricas["por_mes"].to_csv("outputs/metricas_por_mes.csv", index=False, encoding="utf-8-sig")
+    self.clientes.to_csv("outputs/segmentacao_clientes.csv", index=False, encoding="utf-8-sig")
+    print("[Analisador] CSVs exportados: metricas_por_mes.csv, segmentacao_clientes.csv")
+
+AnalisadorDeVendas.exportar_csv = exportar_csv
+
+# --- teste da Etapa 1 ---
+analisador.exportar_csv()
