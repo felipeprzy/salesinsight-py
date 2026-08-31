@@ -871,3 +871,183 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
+    
+# Adicional: Análise com Tabela Mestra (abordagem alternativa com o intúito de analisar os dados "como uma planilha dinâmica do excell" .
+
+# construir a tabela mestra com segmento como coluna
+
+df_mestra = analisador.df_limpo.copy()
+df_mestra["total_gasto_cliente"] = df_mestra.groupby("cliente")["receita_total"].transform("sum")
+df_mestra["segmento"] = df_mestra["total_gasto_cliente"].apply(
+    lambda v: "Bronze" if v < 5000 else ("Prata" if v < 15000 else "Ouro")
+)
+
+print("Tabela mestra criada, com segmento como coluna direta:")
+print(df_mestra[["id_venda", "cliente", "regiao", "categoria", "receita_total", "segmento"]].head())
+
+# Declaração de cores para facilitar na análise visual e padronização.
+
+
+cores_segmento = {"Bronze": "#B08D57", "Prata": "#A8A8A8", "Ouro": "#D4AF37"}
+cores_categoria = {"Computadores": "#2E5EAA", "Celulares": "#E07A3E", "Perifericos": "#3FA34D"}
+
+# Gráfico 1: participacao de cada categoria na receita.
+
+pizza_dados = pd.pivot_table(
+    df_mestra, index="categoria", values="receita_total", aggfunc="sum"
+).sort_values("receita_total", ascending=False)
+
+# a cor de cada fatia e BUSCADA no dicionario cores_categoria
+
+cores_da_pizza = [cores_categoria[c] for c in pizza_dados.index]
+
+fig, ax = plt.subplots(figsize=(7, 7))
+ax.pie(pizza_dados["receita_total"], labels=pizza_dados.index,
+       autopct="%1.1f%%", startangle=90, colors=cores_da_pizza)
+ax.set_title("Participacao de Cada Categoria na Receita Total")
+plt.tight_layout()
+plt.savefig("outputs/graficos/pizza_categoria.png", dpi=150)
+plt.close()
+
+# Gráfico 2: região x segmento 
+
+tabela_regiao_segmento = pd.pivot_table(
+    df_mestra, index="regiao", columns="segmento", values="receita_total",
+    aggfunc="sum", fill_value=0
+)[["Bronze", "Prata", "Ouro"]]
+tabela_regiao_segmento = tabela_regiao_segmento.loc[
+    tabela_regiao_segmento.sum(axis=1).sort_values(ascending=False).index
+]
+
+fig, ax = plt.subplots(figsize=(10, 6))
+base = None
+for segmento in ["Bronze", "Prata", "Ouro"]:
+    valores = tabela_regiao_segmento[segmento]
+    ax.bar(tabela_regiao_segmento.index, valores, bottom=base,
+           label=segmento, color=cores_segmento[segmento])   # busca no dicionario
+    base = valores if base is None else base + valores
+ax.set_title("Receita por Regiao, Dividida por Segmento de Cliente")
+ax.set_xlabel("Regiao")
+ax.set_ylabel("Receita Total (R$)")
+ax.legend(title="Segmento")
+plt.tight_layout()
+plt.savefig("outputs/graficos/barras_regiao_segmento.png", dpi=150)
+plt.close()
+
+# Gráfico 3Quais categorias cada segmento compra mais ?
+
+pivot_a = pd.pivot_table(
+    df_mestra, index="categoria", columns="segmento", values="receita_total",
+    aggfunc="sum", fill_value=0
+)[["Bronze", "Prata", "Ouro"]]
+print("\nReceita por categoria, cruzada com segmento de cliente:")
+print(pivot_a)
+
+longo_a = pivot_a.reset_index().melt(id_vars="categoria", var_name="segmento", value_name="receita_total")
+
+fig, ax = plt.subplots(figsize=(9, 6))
+sns.barplot(data=longo_a, x="categoria", y="receita_total", hue="segmento",
+            palette=cores_segmento, ax=ax)   # o dicionario inteiro vira a paleta
+ax.set_title("Receita por Categoria, Dividida por Segmento de Cliente")
+ax.set_xlabel("Categoria")
+ax.set_ylabel("Receita Total (R$)")
+plt.tight_layout()
+plt.savefig("outputs/graficos/pergunta_a_categoria_segmento.png", dpi=150)
+plt.close()
+
+# Gráfico 4 :Tícket médio e o numero de vendas mudam por segmento.
+
+ticket_por_segmento = df_mestra.groupby("segmento")["receita_total"].mean().reindex(["Bronze", "Prata", "Ouro"])
+contagem_por_segmento = df_mestra.groupby("segmento")["id_venda"].count().reindex(["Bronze", "Prata", "Ouro"])
+print("\nTicket medio por segmento:")
+print(ticket_por_segmento)
+print("\nNumero de vendas por segmento:")
+print(contagem_por_segmento)
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+axes[0].bar(ticket_por_segmento.index, ticket_por_segmento.values,
+            color=[cores_segmento[s] for s in ticket_por_segmento.index])
+axes[0].set_title("Ticket Medio por Segmento")
+axes[0].set_xlabel("Segmento")
+axes[0].set_ylabel("Receita Media (R$)")
+axes[1].bar(contagem_por_segmento.index, contagem_por_segmento.values,
+            color=[cores_segmento[s] for s in contagem_por_segmento.index])
+axes[1].set_title("Numero de Vendas por Segmento")
+axes[1].set_xlabel("Segmento")
+axes[1].set_ylabel("Quantidade de Vendas")
+plt.tight_layout()
+plt.savefig("outputs/graficos/pergunta_b_ticket_contagem.png", dpi=150)
+plt.close()
+
+# Gráfico 5: quantidade de vendas por categoria em cada segmento.
+
+pivot_c = pd.pivot_table(
+    df_mestra, index="categoria", columns="segmento", values="id_venda",
+    aggfunc="count", fill_value=0
+)[["Bronze", "Prata", "Ouro"]]
+print("\nNumero de vendas (transacoes) por categoria x segmento:")
+print(pivot_c)
+
+longo_c = pivot_c.reset_index().melt(id_vars="categoria", var_name="segmento", value_name="n_vendas")
+
+fig, ax = plt.subplots(figsize=(9, 6))
+sns.barplot(data=longo_c, x="categoria", y="n_vendas", hue="segmento",
+            palette=cores_segmento, ax=ax)
+ax.set_title("Numero de Vendas por Categoria, Dividido por Segmento")
+ax.set_xlabel("Categoria")
+ax.set_ylabel("Numero de Vendas")
+plt.tight_layout()
+plt.savefig("outputs/graficos/pergunta_c_contagem_categoria_segmento.png", dpi=150)
+plt.close()
+
+# Gráfico 6: quantidade de itens (unidades) vendidos por categoria em cada segmento.
+
+pivot_d = pd.pivot_table(
+    df_mestra, index="categoria", columns="segmento", values="quantidade",
+    aggfunc="sum", fill_value=0
+)[["Bronze", "Prata", "Ouro"]]
+print("\nQuantidade de itens (unidades) vendidos por categoria x segmento:")
+print(pivot_d)
+
+longo_d = pivot_d.reset_index().melt(id_vars="categoria", var_name="segmento", value_name="quantidade")
+
+fig, ax = plt.subplots(figsize=(9, 6))
+sns.barplot(data=longo_d, x="categoria", y="quantidade", hue="segmento",
+            palette=cores_segmento, ax=ax)
+ax.set_title("Quantidade de Itens Vendidos por Categoria, Dividido por Segmento")
+ax.set_xlabel("Categoria")
+ax.set_ylabel("Quantidade de Itens (unidades)")
+plt.tight_layout()
+plt.savefig("outputs/graficos/pergunta_d_quantidade_categoria_segmento.png", dpi=150)
+plt.close()
+
+# Gráfico 7: a receita mensal por segmento
+ 
+pivot_e = pd.pivot_table(
+    df_mestra, index="mes", columns="segmento", values="receita_total",
+    aggfunc="sum", fill_value=0
+)[["Bronze", "Prata", "Ouro"]]
+print("\nReceita por mes, cruzada com segmento de cliente:")
+print(pivot_e)
+
+participacao_ouro_mensal = (pivot_e["Ouro"] / pivot_e.sum(axis=1) * 100).round(1)
+print("\nParticipacao percentual do segmento Ouro na receita, mes a mes:")
+print(participacao_ouro_mensal)
+
+fig, ax = plt.subplots(figsize=(10, 6))
+for segmento in ["Bronze", "Prata", "Ouro"]:
+    ax.plot(pivot_e.index, pivot_e[segmento], marker="o", linewidth=2,
+            label=segmento, color=cores_segmento[segmento])
+ax.set_title("Receita Mensal, Dividida por Segmento de Cliente")
+ax.set_xlabel("Mes")
+ax.set_ylabel("Receita Total (R$)")
+ax.legend(title="Segmento")
+plt.tight_layout()
+plt.savefig("outputs/graficos/pergunta_e_mes_segmento.png", dpi=150)
+plt.close()
+
+print("\n7 graficos extras salvos em outputs/graficos/ (2 iniciais + 5 das perguntas A-E)")

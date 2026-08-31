@@ -5,18 +5,15 @@
 # SalesInsight PY
 
 ## Sobre o projeto
-Analise e visualização de dados de vendas desenvolvida em Python. O
-projeto carrega, limpa, transforma, agrega e visualiza um dataset de
-vendas, gerando métricas por período, produto, categoria e região,
-além de uma segmentação simples de clientes por faixa de gasto.
+Análise e visualização de dados de vendas desenvolvida em Python. 
+O projeto carrega, limpa, transforma, agrega e visualiza um dataset de vendas, gerando métricas por período, produto, categoria e região, além de uma segmentação de clientes por faixa de gasto.
 
 ## O que o projeto analisa
 - Receita total e volume de vendas por mês e por trimestre
 - Top produtos e categorias por receita
 - Desempenho por região
 - Segmentação de clientes por nível de gasto (Bronze, Prata, Ouro)
-- Operações numéricas vetorizadas com NumPy (media, mediana, desvio
-  padrão, broadcasting, filtragem booleana)
+- Operações numéricas vetorizadas com NumPy (media, mediana, desvio padrão, broadcasting, filtragem booleana)
 - Exportação de relatórios em CSV e JSON, e de gráficos em PNG
 
 ## Conceitos aplicados (Modulo 01 - Semanas 01 a 08)
@@ -65,13 +62,15 @@ salesinsight-py/
 | |-- quantidade_vs_receita.png
 | |-- painel_resumo.png
 
+## Decisões técnicas 
 
-## Decisões técnicas
-Optei por remover registros com dados inválidos (datas invalidas,
-nulos em quantidade e preco_unitario) em vez de preenchê-los com
-algum valor estimado. O relatório de limpeza
-detalha exatamente quantos registros foram removidos e por qual
-motivo, permitindo auditar o processo.
+Optei por remover registros com dados inválidos (datas inválidas, nulos em quantidade e preco_unitario) em vez de preenchê-los com algum valor estimado. 
+Para verificar a questão da limpeza, em cada etapa os problemas são contados e armazenados antes de serem removidos, no final monto um relatório mostrando quantas linhas eu tinha no início, quantas caíram por data inválida, quantas por nulo em quantidade, quantas por nulo em preço, e quantas tinham os dois problemas ao mesmo tempo. A soma de tudo que foi removido tem que bater exatamente com a diferença entre o total inicial e o final.
+Quando verifiquei o resultado do regex para limpeza dos nomes (utilizando "re.sub"), vi que a limpeza não resolveu. Os caracteres "ruins" foram apagados, mas não foi substituído pelo caractere do padrão do nome (Cliente_NNN) , então resolvi considerar apenas o número do campo nome e criar o padrão da nomenclatura (utilizando o "re.findall")
+Ao segmentar clientes foram usados limites via lambda ( "Bronze" if < 5000 else ("Prata" if  < 15000 else "Ouro") ).
+Na parte de criar o analizador de vendas, a lógica utilizada foi "grudando" o método na classe ( def limpar(self) ), ao invés dos métodos escritos direto dentro do corpo da classe ( class AnalisadorDeVendas: ... def__init__(self, caminho_arquivo): ... def carregar(self): ... def limpar(self): ).
+Foi feito um bloco adicional com a criação de uma tabela mestra ( adicionando o segmento de cliente como coluna via groupby().transform("sum") ) no lugar do usado na classe principal ( merge ). A idéia foi de analizar os dados de forma semelhante a uma planilha dinâmica, o que trouxe mais informações analíticas sobre os dados.
+
 
 ## Ferramentas utilizadas
 - Python 3.14
