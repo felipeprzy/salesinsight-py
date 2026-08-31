@@ -202,6 +202,7 @@ def limpar_dados(df):
     linhas_iniciais = len(df)
 
     # Etapa 1: remover espacos extras nas colunas de texto
+    
     colunas_texto = ["cliente", "produto", "categoria", "regiao"]
     for col in colunas_texto:
         df[col] = df[col].str.strip()
@@ -956,7 +957,7 @@ ax.set_title("Receita por Categoria, Dividida por Segmento de Cliente")
 ax.set_xlabel("Categoria")
 ax.set_ylabel("Receita Total (R$)")
 plt.tight_layout()
-plt.savefig("outputs/graficos/pergunta_a_categoria_segmento.png", dpi=150)
+plt.savefig("outputs/graficos/receita_categoria_segmento.png", dpi=150)
 plt.close()
 
 # Gráfico 4 :Tícket médio e o numero de vendas mudam por segmento.
@@ -980,7 +981,7 @@ axes[1].set_title("Numero de Vendas por Segmento")
 axes[1].set_xlabel("Segmento")
 axes[1].set_ylabel("Quantidade de Vendas")
 plt.tight_layout()
-plt.savefig("outputs/graficos/pergunta_b_ticket_contagem.png", dpi=150)
+plt.savefig("outputs/graficos/ticket_contagem.png", dpi=150)
 plt.close()
 
 # Gráfico 5: quantidade de vendas por categoria em cada segmento.
@@ -1001,7 +1002,7 @@ ax.set_title("Numero de Vendas por Categoria, Dividido por Segmento")
 ax.set_xlabel("Categoria")
 ax.set_ylabel("Numero de Vendas")
 plt.tight_layout()
-plt.savefig("outputs/graficos/pergunta_c_contagem_categoria_segmento.png", dpi=150)
+plt.savefig("outputs/graficos/contagem_categoria_segmento.png", dpi=150)
 plt.close()
 
 # Gráfico 6: quantidade de itens (unidades) vendidos por categoria em cada segmento.
@@ -1022,10 +1023,10 @@ ax.set_title("Quantidade de Itens Vendidos por Categoria, Dividido por Segmento"
 ax.set_xlabel("Categoria")
 ax.set_ylabel("Quantidade de Itens (unidades)")
 plt.tight_layout()
-plt.savefig("outputs/graficos/pergunta_d_quantidade_categoria_segmento.png", dpi=150)
+plt.savefig("outputs/graficos/quantidade_categoria_segmento.png", dpi=150)
 plt.close()
 
-# Gráfico 7: a receita mensal por segmento
+# Gráfico 7: receita mensal por segmento
  
 pivot_e = pd.pivot_table(
     df_mestra, index="mes", columns="segmento", values="receita_total",
@@ -1047,7 +1048,7 @@ ax.set_xlabel("Mes")
 ax.set_ylabel("Receita Total (R$)")
 ax.legend(title="Segmento")
 plt.tight_layout()
-plt.savefig("outputs/graficos/pergunta_e_mes_segmento.png", dpi=150)
+plt.savefig("outputs/graficos/receita_mensal_por_segmento.png", dpi=150)
 plt.close()
 
 print("\n7 graficos extras salvos em outputs/graficos/ (2 iniciais + 5 das perguntas A-E)")

@@ -78,5 +78,15 @@ Foi feito um bloco adicional com a criação de uma tabela mestra ( adicionando 
 - Bibliotecas: pandas, numpy, matplotlib, seaborn (nativas: re, json, os)
 - GitHub e GitHub Desktop para versionamento
 
+## Respostas as perguntas
+Há uma queda brusca nos meses 6,7 e começou a recuperar após o mês 8, o que afeta o trimestre mas fica "diluído" no cálcuolo do trimestre, bem como as vendas do mês 5 e 11. No primeiro trimestre tendência de queda, no segundo alta volatilidade, no terceiro recuperação nas vendas, fechando com a maior venda mensal e o início da retração.
+Os produtos / catergorias que geram maiores receitas são computadores.
+As regiões de maior desempenho são: Norte em primeiro lugar, sudeste e sul.
+Os clientes mais valiosos são os Ouro, com uma representatividade muito maior em todos os aspectos.
+A relação maior é com a categoria (computadores) e com o segmento de cliente (ouro) do que a quantidade vendida. Com relação as transações, existe uma correlação positiva.
+
 ## Vídeo de demonstração
-[inserir o link aqui apos gravar]
+https://drive.google.com/file/d/1WmsIASCVd3NDXldCChjEB_IqeErZ8C0T/view?usp=sharing
+
+## Repositório público no GitHub: 
+https://github.com/felipeprzy/salesinsight-py
